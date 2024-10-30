@@ -33,6 +33,7 @@ SITE_TITLE = 'Mi Subtítulo Personalizado'
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -130,4 +131,13 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+JAZZMIN_SETTINGS = {
+    "welcome_sign": "Bienvenido al Panel de Administración",  # Cambia el mensaje de bienvenida
+    "copyright": "Juan Carlos Estevez",  # Cambia el mensaje de copyright
+    "search_model": "auth.User",  # Puedes cambiar el modelo predeterminado en la barra de búsqueda
+    "site_brand": "Administración",  # Cambia el título del sitio en el encabezado
+}
 
+JAZZMIN_UI_TWEAKS = {
+    "theme": "darkly", #Cambiar los diferentes temas #https://django-jazzmin.readthedocs.io/ui_customisation/#themes
+}
