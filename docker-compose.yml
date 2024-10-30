@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+#Github: https://github.com/juank20097/Django_Form   ///   docker build -t django_comite:latest .
+  django:
+    image: django_comite
+    container_name: django_comite
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
