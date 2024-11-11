@@ -10,3 +10,20 @@ services:
       - .:/app
     ports:
       - "8000:8000"
+    environment:
+      - DB_NAME=diccionario
+      - DB_USER=postgres
+      - DB_PASSWORD=root
+      - DB_HOST=192.168.12.202
+      - DB_PORT=5432
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"  # Exponer el puerto 80 al host
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Montar la configuración de Nginx
+    depends_on:
+      - django  # Asegurarse de que Django esté corriendo antes de iniciar Nginx

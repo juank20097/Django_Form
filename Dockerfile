@@ -11,16 +11,19 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copiar los archivos de requisitos e instalarlos
+# Command: pip freeze > requirements.txt
 COPY requirements.txt /app/
 #RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org --timeout=120 --ignore-installed -r requirements.txt
 
-
 # Copiar el resto de la aplicación
 COPY . /app/
+
+# Asegúrate de que los archivos estáticos sean recogidos
+RUN python manage.py collectstatic --noinput
 
 # Exponer el puerto en el que se ejecutará la aplicación
 EXPOSE 8000
 
-# Comando para ejecutar la aplicación
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Comando para ejecutar la aplicación con Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "comite.wsgi:application"]
