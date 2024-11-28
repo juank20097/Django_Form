@@ -25,5 +25,5 @@ RUN python manage.py collectstatic --noinput
 # Exponer el puerto en el que se ejecutará la aplicación
 EXPOSE 8000
 
-# Comando para ejecutar la aplicación con Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "comite.wsgi:application"]
+# Configura el comando para ejecutar la aplicación con gunicorn
+CMD ["gunicorn", "comite.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

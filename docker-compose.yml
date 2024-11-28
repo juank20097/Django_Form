@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-#Github: https://github.com/juank20097/Django_Form   ///   docker build -t django_comite:latest .
+  #Github: https://github.com/juank20097/Django_Form   ///   docker build -t django_comite:latest .
   django:
     image: django_comite
     container_name: django_comite
     restart: always
     volumes:
-      - .:/app
+      - staticfiles:/app/staticfiles
     ports:
       - "8000:8000"
     environment:
@@ -18,12 +18,14 @@ services:
       - DB_PORT=5432
 
   nginx:
-    image: nginx:alpine
-    container_name: nginx
-    restart: always
+    image: nginx:latest
     ports:
-      - "80:80"  # Exponer el puerto 80 al host
+      - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Montar la configuración de Nginx
+      - staticfiles:/static
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - django  # Asegurarse de que Django esté corriendo antes de iniciar Nginx
+      - django
+
+volumes:
+  staticfiles:
