@@ -142,6 +142,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTHENTICATION_BACKENDS = [
+    'login.auth_backends.SpringBootAuthBackend',  # Primero intenta en Spring Boot
+    'django.contrib.auth.backends.ModelBackend',  # Luego usa la autenticación normal de Django
+]
+
 JAZZMIN_SETTINGS = {
     "welcome_sign": "Bienvenido al Panel de Administración",  # Cambia el mensaje de bienvenida
     "copyright": "Juan Carlos Estevez",  # Cambia el mensaje de copyright
@@ -150,5 +155,5 @@ JAZZMIN_SETTINGS = {
 }
 
 JAZZMIN_UI_TWEAKS = {
-    "theme": "darkly", #Cambiar los diferentes temas #https://django-jazzmin.readthedocs.io/ui_customisation/#themes
+    "theme": "default", #Cambiar los diferentes temas #https://django-jazzmin.readthedocs.io/ui_customisation/#themes
 }
