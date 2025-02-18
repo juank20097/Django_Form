@@ -19,8 +19,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, re_path
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 
 urlpatterns = [
+    path('admin/password_change/', lambda request: redirect('/admin/')),  # Redirige a /admin/
     path('admin/', admin.site.urls),
     re_path(r'^$', lambda request: HttpResponseRedirect('/admin/')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
