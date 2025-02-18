@@ -1,4 +1,5 @@
 import requests
+import hashlib
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
@@ -7,25 +8,31 @@ from django.contrib.auth.models import Group
 
 User = get_user_model()
 
-SPRING_AUTH_URL = "http://localhost:8080/user/{username}/{password}"  # URL del servicio en Spring Boot
+SPRING_AUTH_URL = "http://localhost:8080/login"  # URL del servicio en Spring Boot
 
 class SpringBootAuthBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         if not username or not password:
             return None  # Retorna None si no hay credenciales
 
-        # 🔹 Construcción de la URL con los parámetros
-        auth_url = SPRING_AUTH_URL.format(username=username, password=password)
+        # 🔹 Encriptar la contraseña antes de enviarla a Spring Boot
+        encrypted_password = self.encrypt_password(password)
+
+        # 🔹 Crear un diccionario con los datos a enviar en el cuerpo de la solicitud
+        payload = {
+            'username': username,
+            'password': encrypted_password
+        }
 
         try:
             # 🔹 Consultar el servicio de autenticación en Spring Boot
-            response = requests.post(auth_url)
+            response = requests.post(SPRING_AUTH_URL,json=payload)
 
             if response.status_code == 200:
                 data = response.json()
                 print("✅ Respuesta del servidor Spring Boot:", data)
                 # 🔹 Si el usuario es autenticado en Spring Boot, buscarlo en Django
-                if data is None:
+                if data == 0:
                     return None
                 
                 # 🔹 Si la autenticación es exitosa, verificar si el usuario ya existe
@@ -60,3 +67,9 @@ class SpringBootAuthBackend(ModelBackend):
 
         # 🔹 Si la autenticación falla en Spring Boot, intentar con la autenticación de Django
         return super().authenticate(request, username=username, password=password)
+
+    def encrypt_password(self, password):
+        sha256_hash = hashlib.sha256()
+        sha256_hash.update(password.encode('utf-8'))
+        return sha256_hash.hexdigest()
+        
